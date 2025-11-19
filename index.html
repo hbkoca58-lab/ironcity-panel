@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IronCity - Profesyonel Panel</title> 
+    <style>
+        /* --- TEMEL TASARIM --- */
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: #0A0A0A; 
+            color: #E0E0E0; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px 0; 
+            margin: 0; 
+            min-height: 100vh;
+        }
+        .container { 
+            background-color: #1A1A1A; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 30px rgba(0, 255, 85, 0.15); 
+            width: 700px; 
+            max-width: 95%; 
+            margin-bottom: 30px;
+        }
+        h2 { 
+            color: #00FF55; 
+            text-align: center; 
+            border-bottom: 2px solid #333; 
+            padding-bottom: 15px; 
+            margin-bottom: 30px;
+        }
+        h3 { 
+            color: #00BFFF; 
+            margin-top: 25px; 
+            font-size: 1.2em;
+        }
+        h4 {
+            color: #E0E0E0;
+            border-left: 3px solid #00FF55;
+            padding-left: 10px;
+            margin-top: 20px;
+        }
+        
+        /* --- FORM ELEMANLARI --- */
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            background: #2A2A2A; 
+            border: 1px solid #444; 
+            color: white; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            resize: vertical; 
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #00FF55; 
+            outline: none;
+        }
+        
+        /* --- BUTONLAR --- */
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: #00FF55; 
+            color: #000; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            transition: background-color 0.3s, transform 0.1s;
+            text-transform: uppercase;
+        }
+        button:hover { 
+            background-color: #00CC44; 
+            transform: translateY(-1px);
+        }
+        button.logout { 
+            background-color: #FF4444; 
+            color: white; 
+            margin-top: 30px; 
+        }
+        button.logout:hover { 
+            background-color: #CC3333; 
+        }
+
+        /* VURGULU BUTONLAR */
+        #uyeGuncelleBtn, #ayarGuncelleBtn {
+            background:#00BFFF; 
+            color:white;
+        }
+        #uyeGuncelleBtn:hover, #ayarGuncelleBtn:hover {
+            background:#0099CC; 
+        }
+        #yeniUyelikAcBtn {
+            background:#FFA500;
+            color: #1A1A1A;
+        }
+        #yeniUyelikAcBtn:hover {
+            background:#CC8400;
+        }
+        
+        /* --- KUTU VE PANEL STİLLERİ --- */
+        .admin-panel { 
+            border: 1px solid #00BFFF; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-top: 30px; 
+            background: #121212; 
+        }
+        .uyari { 
+            color: #FF4444; 
+            font-size: 0.9em; 
+            margin-top: 10px; 
+            text-align: center; 
+        }
+        #bookingDetails { 
+            background: #2A2A2A; 
+            padding: 15px; 
+            border-radius: 6px; 
+            max-height: 250px; 
+            overflow-y: auto;
+            border-left: 3px solid #00BFFF;
+        }
+        .hidden { display: none !important; }
+        
+        /* ÜYELİK BİLGİ KUTUSU */
+        .membership-info {
+            background-color: #2A2A2A;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 5px solid #00FF55;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1em;
+            box-shadow: 0 0 10px rgba(0, 255, 85, 0.1);
+        }
+        .membership-info strong {
+            color: #00FF55;
+            display: block;
+            margin-top: 5px;
+            font-size: 1.1em;
+        }
+
+        /* GÜNLÜK PROGRAM GÖSTERİM KUTUSU */
+        #wodDisplayBox {
+            background-color: #2A2A2A;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #444;
+            border-left: 4px solid #00BFFF;
+        }
+        #wodDisplayBox strong {
+            display: block;
+            color: #00FF55;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        #wodDisplayBox p {
+            font-size: 0.9em;
+            color: #D0D0D0;
+            line-height: 1.5;
+            margin: 0;
+            white-space: pre-wrap; 
+        }
+        
+        /* --- SAAT KUTULARI (GRID) --- */
+        .saat-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px; 
+            margin-top: 25px; 
+        }
+        .saat-kutusu { 
+            background: #3A3A3A; 
+            padding: 18px 10px; 
+            text-align: center; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            border: 1px solid #3A3A3A; 
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .saat-kutusu span { 
+            display: block; 
+            font-size: 0.85em; 
+            color: #AAAAAA; 
+            margin-top: 5px;
+        }
+        .saat-kutusu b {
+            color: #E0E0E0;
+            font-size: 1.1em;
+        }
+        .saat-kutusu:not(.dolu):not(.open-gym):hover { 
+            background: #4A4A4A; 
+            border-color: #555;
+        }
+        
+        /* Durum Renkleri */
+        .saat-kutusu.secili { background-color: #00FF55; color: #000; border-color: #00FF55; }
+        .saat-kutusu.secili b { color: #000; }
+        .saat-kutusu.secili span { color: #333; }
+        
+        .saat-kutusu.benim { background-color: #00BFFF; color: white; border-color: #00BFFF; }
+        .saat-kutusu.benim b { color: white; }
+        .saat-kutusu.benim span { color: #E0E0E0; }
+
+        .saat-kutusu.dolu { 
+            background-color: #550000; 
+            color: #FFBBBB; 
+            cursor: not-allowed; 
+            opacity: 0.8;
+            border-color: #550000;
+        }
+        .saat-kutusu.dolu b { color: #FFBBBB; }
+        .saat-kutusu.dolu span { color: #FFBBBB; }
+
+        .saat-kutusu.open-gym { 
+            background-color: #333355; 
+            color: #CCCCFF; 
+            border-color: #333355; 
+            cursor: not-allowed; 
+        }
+        .saat-kutusu.open-gym b { color: #CCCCFF; }
+        .saat-kutusu.open-gym span { color: #E0E0E0; }
+
+        
+        /* --- ADMIN PANEL DÜZENİ --- */
+        .admin-section { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 30px; 
+            margin-top: 15px;
+        }
+        
+        /* Günlük Saat Ayar Düzeni */
+        #dailyTimeSettings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        #dailyTimeSettings input {
+            width: 100%; 
+            margin: 0;
+        }
+
+        /* --- MOBİL UYUMLULUK (Responsive) --- */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                margin-top: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .saat-grid { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 10px;
+            }
+            .admin-section { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+            }
+            .schedule-slots, #dailyTimeSettings {
+                grid-template-columns: 1fr; 
+                gap: 10px;
+            }
+            .membership-info {
+                flex-direction: column; 
+                gap: 10px;
+            }
+            .membership-info strong {
+                display: inline;
+                margin-left: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="loginScreen">
+            <h2>IRONCITY | GİRİŞ</h2> 
+            <p style="text-align:center; font-size:0.9em; color:#888;">Rezervasyon ve Yönetim Paneline Erişim.</p>
+            <input type="email" id="loginEmail" placeholder="E-Posta">
+            <input type="password" id="loginPass" placeholder="Şifre">
+            <button id="loginBtn">GİRİŞ YAP</button>
+            <p id="loginError" class="uyari"></p>
+        </div>
+
+        <div id="mainPanel" class="hidden">
+            <h2 id="welcomeText">Hoşgeldin</h2>
+            
+            <div id="adminControls" class="admin-panel hidden">
+                <h3 style="margin-top:0">🛠️ Yönetici Paneli</h3>
+                
+                <div class="admin-section">
+                    <div>
+                        <h4>1. Genel Ayarlar</h4>
+                        <label>Salon Kapasitesi (Kişi):</label>
+                        <input type="number" id="adminKapasite" min="1">
+                        
+                        <hr style="border-color:#333; margin:15px 0;">
+
+                        <h4>Günlük Çalışma Saatleri</h4>
+                        <label>Günü Seç:</label>
+                        <select id="daySelect"></select> 
+                        
+                        <div id="dailyTimeSettings">
+                            <div>
+                                <label>Açılış Saati:</label>
+                                <input type="time" id="openTimeAdmin" value="09:00">
+                            </div>
+                            <div>
+                                <label>Kapanış Saati:</label>
+                                <input type="time" id="closeTimeAdmin" value="22:00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4>2. Üye Süresi Güncelleme</h4>
+                        <label>Üye E-Postası:</label>
+                        <input type="email" id="uyeEmailAdmin" placeholder="Üye E-Postası">
+                        
+                        <label>Yeni Bitiş Tarihi:</label>
+                        <input type="date" id="uyeBitisTarihiAdmin">
+                        
+                        <button id="uyeGuncelleBtn">ÜYE SÜRESİNİ GÜNCELLE</button>
+                    </div>
+                </div>
+
+                <div id="weeklyScheduleContainer">
+                    <h4>3. Haftalık Program Ayarları</h4>
+                    <p style="font-size:0.8em; color:#aaa;">(Hangi saatlerin VOD/Open GYM olacağını belirler.)</p>
+                    
+                    <div id="scheduleAccordion">
+                        </div>
+
+                    <button id="ayarGuncelleBtn">TÜM AYARLARI KAYDET</button>
+                </div>
+
+                <hr style="border-color:#333; margin:25px 0;">
+                
+                <div>
+                    <h4>4. Günlük Program Notu</h4> 
+                    <p style="font-size:0.8em; color:#aaa;">(Rezervasyon alanının üzerinde görünür.)</p>
+                    <textarea id="wodInputAdmin" placeholder="Örn: Pazartesi WOD: 5 Raund - 10 Burpee, 15 Squat, 20 KB Swing"></textarea>
+                    <button id="wodKaydetBtn" style="background:#00FF55; color:black;">PROGRAM NOTUNU KAYDET</button>
+                </div>
+
+                <hr style="border-color:#333; margin:25px 0;">
+
+                <div>
+                    <h4>5. Randevu Listeleme</h4>
+                    <label>Görüntülenecek Tarihi Seç:</label>
+                    <input type="date" id="bookingDateAdmin">
+                    <button id="showBookingsBtn" style="background:#00BFFF; color:white;">RANDEVULARI GÖRÜNTÜLE</button>
+                    <p style="font-size:0.9em; margin-top:10px;">Katılımcılar:</p>
+                    <div id="bookingDetails">Randevu detayları burada listelenecek.</div>
+                </div>
+
+                <hr style="border-color:#333; margin:25px 0;">
+                
+                <div>
+                    <h4>6. Yeni Üyelik Oluşturma</h4>
+                    <p style="font-size:0.8em; color:#aaa;">(Yeni bir kullanıcı hesabı oluşturur ve şifre belirleme e-postası gönderir.)</p>
+                    
+                    <label>Ad ve Soyad:</label>
+                    <input type="text" id="newUyeAdSoyad" placeholder="Ad Soyad" autocomplete="name"> 
+                    
+                    <input type="email" id="newUyeEmail" placeholder="Yeni Üye E-Postası" autocomplete="off">
+                    
+                    <label style="margin-top:10px; display:block;">Üyelik Bitiş Tarihi:</label>
+                    <input type="date" id="newUyeBitisTarihi">
+                    <button id="yeniUyelikAcBtn">YENİ ÜYELİK OLUŞTUR</button>
+                    <p id="uyeOlusturmaDurum" class="uyari" style="color:#FFA500;"></p>
+                </div>
+
+            </div>
+
+            <div id="bookingArea">
+                <h3>📅 Antrenman Saati Seç (Bugün: <span id="bugunTarih"></span>)</h3>
+                
+                <div id="wodDisplayBox">
+                    <strong>Günlük Program:</strong>
+                    <p id="wodDisplay">Yükleniyor...</p>
+                </div>
+
+                <p id="statusMsg" style="font-size:0.9em; color:#888; margin-top:25px;">Müsait saatleri seçin.</p>
+                
+                <div class="saat-grid" id="saatListesi">
+                    </div>
+
+                <button id="randevuBtn">SEÇİLİ SAATİ AYIRT</button>
+            </div>
+            
+            <div class="membership-info">
+                <span>
+                    İsim: <strong id="kullaniciAdiDisplay">Yükleniyor...</strong> 
+                </span>
+                <span>
+                    Üyelik Bitiş Tarihi: <strong id="bitisTarihiDisplay">Yükleniyor...</strong>
+                </span>
+            </div>
+            
+            <button class="logout" id="cikisBtn">GÜVENLİ ÇIKIŞ YAP</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // sendPasswordResetEmail eklendi
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, arrayUnion, arrayRemove, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // --- AYARLAR ---
+        const firebaseConfig = {
+            // ⚠️ BURAYA KENDİ PROJE BİLGİLERİNİ YAPIŞTIR!
+            apiKey: "AIzaSyCb5UEAdIvmPz2cvfVg2Hd54rLt79_Kf20",
+  authDomain: "sporsalonuapp-547cb.firebaseapp.com",
+  projectId: "sporsalonuapp-547cb",
+  storageBucket: "sporsalonuapp-547cb.firebasestorage.app",
+  messagingSenderId: "601776205922",
+  appId: "1:601776205922:web:a8df55bdb39188eca8613b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global Değişkenler
+        let currentUser = null;
+        let userRole = "uye";
+        let salonKapasitesi = 5;
+        let dailySchedule = {}; 
+        let openTime = "09:00"; 
+        let closeTime = "22:00"; 
+        let secilenSaat = null;
+        let weeklySchedule = {};
+        
+        // PAZARTESİ'den BAŞLAYAN YENİ GÜN SIRALAMASI: (Pazartesi=0, Pazar=6)
+        const gunler = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
+        const getCustomDayIndex = (date) => (date.getDay() - 1 + 7) % 7; 
+
+        const today = new Date();
+        let bugunStr = today.toISOString().split('T')[0];
+        
+        // Başlangıç
+        document.getElementById('bugunTarih').innerText = bugunStr;
+        
+        // --- YARDIMCI FONKSİYONLAR ---
+
+        const timeToMinutes = (time) => {
+            const [h, m] = time.split(':').map(Number);
+            return h * 60 + m;
+        };
+
+        const generateTimeSlots = (start, end, interval = 60) => {
+            let slots = [];
+            let current = timeToMinutes(start);
+            const endMinutes = timeToMinutes(end);
+            
+            while (current < endMinutes) {
+                const h = Math.floor(current / 60);
+                const m = current % 60;
+                slots.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+                current += interval;
+            }
+            return slots;
+        };
+
+        function fillDaySelect() {
+            const select = document.getElementById('daySelect');
+            select.innerHTML = ''; 
+            gunler.forEach((day, index) => {
+                const option = document.createElement('option');
+                option.value = index; 
+                option.textContent = day;
+                select.appendChild(option);
+            });
+            select.value = getCustomDayIndex(today); 
+            updateDailyTimeInputs();
+        }
+
+        function updateDailyTimeInputs() {
+            const selectedDayIndex = document.getElementById('daySelect').value;
+            const dayData = dailySchedule[selectedDayIndex] || { open: '09:00', close: '22:00' };
+
+            document.getElementById('openTimeAdmin').value = dayData.open;
+            document.getElementById('closeTimeAdmin').value = dayData.close;
+        }
+
+        function renderAdminSchedule() {
+            const container = document.getElementById('scheduleAccordion');
+            container.innerHTML = '';
+            
+            const allSlots = generateTimeSlots('00:00', '23:00', 60);
+
+            gunler.forEach((gun, gunIndex) => { 
+                const daySchedule = weeklySchedule[gunIndex] || {}; 
+                const dayTimeData = dailySchedule[gunIndex] || { open: '00:00', close: '23:00' };
+                
+                const details = document.createElement('details');
+                details.className = 'schedule-day';
+                details.innerHTML = `<summary>${gun} Programı</summary>`;
+                
+                const slotsDiv = document.createElement('div');
+                slotsDiv.className = 'schedule-slots';
+                
+                const openMinutes = timeToMinutes(dayTimeData.open);
+                const closeMinutes = timeToMinutes(dayTimeData.close);
+
+                allSlots.forEach(slot => {
+                    const currentType = daySchedule[slot] || 'CLOSED'; 
+                    const slotMinutes = timeToMinutes(slot);
+                    const isWithinOperatingHours = slotMinutes >= openMinutes && slotMinutes < closeMinutes;
+
+                    if(isWithinOperatingHours) {
+                        slotsDiv.innerHTML += `
+                            <div>
+                                <label>${slot}:</label>
+                                <select id="schedule-${gunIndex}-${slot}" data-day="${gunIndex}" data-time="${slot}">
+                                    <option value="VOD" ${currentType === 'VOD' ? 'selected' : ''}>VOD (Rezerv Edilebilir)</option>
+                                    <option value="OPEN_GYM" ${currentType === 'OPEN_GYM' ? 'selected' : ''}>Open GYM</option>
+                                    <option value="CLOSED" ${currentType === 'CLOSED' ? 'selected' : ''}>KAPALI</option>
+                                </select>
+                            </div>
+                        `;
+                    }
+                });
+                
+                details.appendChild(slotsDiv);
+                container.appendChild(details);
+            });
+        }
+
+
+        // --- ANA FONKSİYONLAR ---
+
+        // 1. OTURUM KONTROLÜ
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await kullaniciVerileriniCek(user.uid);
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainPanel').classList.remove('hidden');
+                // Kullanıcı adı bilgisini çekip hoşgeldin mesajına ekliyoruz.
+                document.getElementById('welcomeText').innerText = "HOŞGELDİN, " + document.getElementById('kullaniciAdiDisplay').innerText.toUpperCase();
+                
+                verileriDinle();
+            } else {
+                currentUser = null;
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('mainPanel').classList.add('hidden');
+            }
+        });
+
+        // 2. KULLANICI VERİLERİNİ VE ROLÜNÜ ÇEKME (HATA DÜZELTİLDİ VE GÜNCELLENDİ)
+        async function kullaniciVerileriniCek(uid) {
+            const docRef = doc(db, "uyeler", uid);
+            const docSnap = await getDoc(docRef);
+
+            let kullaniciAdSoyad = "Bilinmiyor";
+            let bitisTarihi = "YOK";
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                userRole = data.rol || "uye";
+                
+                // HATA DÜZELTMESİ: data.email'in varlığını kontrol et
+                if (data.email) {
+                    // Önce adSoyad'ı kullan, yoksa email'i @ işaretinden böl.
+                    kullaniciAdSoyad = data.adSoyad || data.email.split('@')[0]; 
+                } else {
+                    // Eğer email bile yoksa, sadece UID'nin ilk 6 karakterini kullan.
+                    kullaniciAdSoyad = `UID-${uid.substring(0, 6)}`;
+                }
+
+                bitisTarihi = data.uyelikBitisTarihi || "YOK";
+                
+                if (userRole !== 'admin' && bitisTarihi < bugunStr) {
+                    alert("⚠️ Üyeliğinizin süresi dolmuş! Lütfen yönetimle görüşün.");
+                    signOut(auth);
+                    return;
+                }
+            } else {
+                userRole = "uye";
+            }
+            
+            document.getElementById('kullaniciAdiDisplay').innerText = kullaniciAdSoyad;
+            document.getElementById('bitisTarihiDisplay').innerText = bitisTarihi;
+
+            if (userRole === 'admin') {
+                document.getElementById('adminControls').classList.remove('hidden');
+                document.getElementById('bookingDateAdmin').value = bugunStr;
+                fillDaySelect(); 
+            } else {
+                document.getElementById('adminControls').classList.add('hidden');
+            }
+        }
+
+        // 3. CANLI VERİ AKIŞI (AYARLAR VE RANDEVULAR)
+        function verileriDinle() {
+            onSnapshot(doc(db, "ayarlar", "genel"), (doc) => {
+                if(doc.exists()) {
+                    const data = doc.data();
+                    salonKapasitesi = data.kapasite || 5;
+                    weeklySchedule = data.weeklySchedule || {};
+                    dailySchedule = data.dailySchedule || {}; 
+                    
+                    const todayDayIndex = getCustomDayIndex(today);
+                    const todayTimes = dailySchedule[todayDayIndex] || { open: '09:00', close: '22:00' };
+                    
+                    openTime = todayTimes.open;
+                    closeTime = todayTimes.close;
+                    
+                    if(userRole === 'admin') {
+                        document.getElementById('adminKapasite').value = salonKapasitesi;
+                        updateDailyTimeInputs(); 
+                        renderAdminSchedule(); 
+                    }
+                }
+            });
+
+            onSnapshot(doc(db, "randevular", bugunStr), (docSnap) => {
+                let doluVeriler = {};
+                let programNotu = ""; 
+                
+                if (docSnap.exists()) {
+                    doluVeriler = docSnap.data();
+                    programNotu = docSnap.data().programNotu || "";
+                }
+                
+                saatleriCiz(doluVeriler, programNotu); 
+                
+                if (userRole === 'admin') {
+                    const wodInput = document.getElementById('wodInputAdmin');
+                    if(wodInput) wodInput.value = programNotu;
+                }
+            });
+        }
+
+        // 4. SAATLERİ OLUŞTURMA
+        function saatleriCiz(doluVeriler, programNotu = "") {
+            const grid = document.getElementById('saatListesi');
+            grid.innerHTML = "";
+            
+            const musaitSaatler = generateTimeSlots(openTime, closeTime);
+            const bugunGunIndex = getCustomDayIndex(today);
+            
+            // Günlük Programı Göster
+            const wodDisplay = document.getElementById('wodDisplay');
+            let displayContent = programNotu.trim() !== "" 
+                ? programNotu 
+                : "Henüz belirlenmedi.";
+            wodDisplay.innerText = displayContent;
+
+
+            let reservableFound = false;
+
+            musaitSaatler.forEach(saat => {
+                const div = document.createElement('div');
+                div.className = 'saat-kutusu';
+
+                const slotType = (weeklySchedule[bugunGunIndex] && weeklySchedule[bugunGunIndex][saat]) || 'VOD';
+                
+                const katilimcilar = doluVeriler[saat] || [];
+                const dolulukOrani = katilimcilar.length;
+                const benVarMiyim = katilimcilar.includes(currentUser.uid);
+
+                if (slotType === 'VOD') {
+                    reservableFound = true;
+                    div.innerHTML = `<b>VOD - ${saat}</b><span>${dolulukOrani} / ${salonKapasitesi} Dolu</span>`;
+
+                    if (benVarMiyim) {
+                        div.classList.add('benim');
+                        div.innerHTML += " ✅";
+                        div.onclick = () => randevuIptalEt(saat);
+                    } else if (dolulukOrani >= salonKapasitesi) {
+                        div.classList.add('dolu');
+                        div.innerHTML += " ⛔";
+                        div.onclick = null;
+                    } else {
+                        div.onclick = () => {
+                            document.querySelectorAll('.saat-kutusu').forEach(k => k.classList.remove('secili'));
+                            div.classList.add('secili');
+                            secilenSaat = saat;
+                        };
+                    }
+
+                } else if (slotType === 'OPEN_GYM') {
+                    div.classList.add('open-gym');
+                    div.innerHTML = `<b>OPEN GYM - ${saat}</b><span>Rezerve Edilemez</span>`;
+                    div.onclick = null;
+
+                } else { // CLOSED
+                    div.classList.add('dolu');
+                    div.innerHTML = `<b>KAPALI - ${saat}</b><span>Kapalıdır</span>`;
+                    div.onclick = null;
+                }
+                
+                grid.appendChild(div);
+            });
+            
+            document.getElementById('randevuBtn').disabled = !reservableFound;
+
+            if (!reservableFound && musaitSaatler.length > 0) {
+                 document.getElementById('statusMsg').innerText = "Bugün rezerve edilebilir VOD saatleri bulunmamaktadır.";
+            } else if (musaitSaatler.length === 0) {
+                 document.getElementById('statusMsg').innerText = "Salonun çalışma saatleri ayarlanmamıştır.";
+            } else {
+                 document.getElementById('statusMsg').innerText = "Müsait saatleri seçin.";
+            }
+        }
+
+        // 5. RANDEVU ALMA İŞLEMİ
+        async function randevuAl() {
+            if (!secilenSaat) return alert("Lütfen bir saat seçin.");
+            
+            const bugunGunIndex = getCustomDayIndex(today);
+            const slotType = (weeklySchedule[bugunGunIndex] && weeklySchedule[bugunGunIndex][secilenSaat]) || 'VOD';
+
+            if (slotType !== 'VOD') {
+                return alert("❌ Bu saat VOD değildir ve rezerve edilemez.");
+            }
+            
+            const mevcutRandevu = document.querySelector('.saat-kutusu.benim');
+            if (mevcutRandevu) {
+                return alert("❌ Günde sadece 1 randevu alabilirsiniz! Önce mevcut randevunuzu iptal edin.");
+            }
+
+            const randevuRef = doc(db, "randevular", bugunStr);
+            const docSnap = await getDoc(randevuRef);
+            let mevcutListe = [];
+            if(docSnap.exists() && docSnap.data()[secilenSaat]) {
+                mevcutListe = docSnap.data()[secilenSaat];
+            }
+
+            if(mevcutListe.length >= salonKapasitesi) {
+                return alert("Üzgünüm, bu VOD saati az önce doldu!");
+            }
+
+            await setDoc(randevuRef, {
+                [secilenSaat]: arrayUnion(currentUser.uid)
+            }, { merge: true });
+
+            alert("VOD randevusu alındı! 💪");
+            secilenSaat = null;
+        }
+
+        // 6. RANDEVU İPTAL
+        async function randevuIptalEt(saat) {
+            if(!confirm(`${saat} randevunu iptal etmek istiyor musun?`)) return;
+
+            const randevuRef = doc(db, "randevular", bugunStr);
+            await updateDoc(randevuRef, {
+                [saat]: arrayRemove(currentUser.uid)
+            });
+        }
+        
+        // ADMIN: Ayarları Güncelle
+        async function ayarGuncelle() {
+            const yeniKapasite = Number(document.getElementById('adminKapasite').value);
+            
+            const selectedDayIndex = document.getElementById('daySelect').value;
+            const openTimeInput = document.getElementById('openTimeAdmin').value;
+            const closeTimeInput = document.getElementById('closeTimeAdmin').value;
+            
+            const updatedDailySchedule = { ...dailySchedule };
+            updatedDailySchedule[selectedDayIndex] = {
+                open: openTimeInput,
+                close: closeTimeInput
+            };
+
+            const newWeeklySchedule = {};
+            const allSelects = document.querySelectorAll('#scheduleAccordion select');
+            
+            allSelects.forEach(select => {
+                const dayIndex = select.dataset.day;
+                const time = select.dataset.time;
+                const type = select.value;
+
+                if (!newWeeklySchedule[dayIndex]) {
+                    newWeeklySchedule[dayIndex] = {};
+                }
+                newWeeklySchedule[dayIndex][time] = type;
+            });
+
+
+            await setDoc(doc(db, "ayarlar", "genel"), { 
+                kapasite: yeniKapasite,
+                weeklySchedule: newWeeklySchedule,
+                dailySchedule: updatedDailySchedule 
+            }, { merge: true });
+
+            alert("Tüm Ayarlar ve Haftalık Program güncellendi!");
+        }
+
+        async function girisYap() {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (e) {
+                document.getElementById('loginError').innerText = "Hata: " + e.message;
+            }
+        }
+
+        function cikisYap() { 
+            signOut(auth);
+        }
+
+        async function wodKaydet() {
+            const wodText = document.getElementById('wodInputAdmin').value.trim();
+            const randevuRef = doc(db, "randevular", bugunStr);
+
+            await setDoc(randevuRef, { programNotu: wodText }, { merge: true });
+
+            alert("Günlük Program Notu kaydedildi!");
+        }
+        
+        // ADMIN: Randevuları Görüntüle (İSİM ÇEKME)
+        async function showBookings() {
+            const selectedDate = document.getElementById('bookingDateAdmin').value;
+            const detailsDiv = document.getElementById('bookingDetails');
+            detailsDiv.innerHTML = 'Yükleniyor...';
+
+            if (!selectedDate) {
+                detailsDiv.innerHTML = 'Lütfen bir tarih seçin.';
+                return;
+            }
+            
+            const randevuRef = doc(db, "randevular", selectedDate);
+            const docSnap = await getDoc(randevuRef);
+            
+            if (!docSnap.exists() || Object.keys(docSnap.data()).length <= 1) { 
+                detailsDiv.innerHTML = `${selectedDate} tarihinde randevu bulunmamaktadır.`;
+                return;
+            }
+
+            const bookingData = docSnap.data();
+            let html = `<strong>${selectedDate} Randevuları:</strong><br>`;
+            
+            const sortedTimes = Object.keys(bookingData).filter(key => key !== 'programNotu').sort();
+
+            // Tüm UID'ler için bir toplu sorgu yapısı
+            const allUIDs = new Set();
+            sortedTimes.forEach(saat => {
+                if(bookingData[saat]) {
+                    bookingData[saat].forEach(uid => allUIDs.add(uid));
+                }
+            });
+
+            // UID'leri ve isimleri tutacak bir harita oluştur
+            const userCache = {};
+            
+            // Tüm UID'ler için toplu veri çekme
+            await Promise.all(Array.from(allUIDs).map(async (uid) => {
+                const userDoc = await getDoc(doc(db, "uyeler", uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    // adSoyad varsa onu kullan, yoksa email'in ilk kısmını kullan, o da yoksa Bilinmiyor de.
+                    userCache[uid] = data.adSoyad || (data.email ? data.email.split('@')[0] : "Bilinmiyor");
+                } else {
+                    userCache[uid] = "Bilinmiyor";
+                }
+            }));
+
+            // Toplanan isimleri kullanarak HTML'i oluştur
+            for (const saat of sortedTimes) {
+                const participantUIDs = bookingData[saat];
+                
+                let names = participantUIDs.map(uid => userCache[uid] || "Bilinmiyor");
+                
+                html += `<strong>${saat} (${participantUIDs.length} Kişi):</strong> ${names.join(', ')}<br>`;
+            }
+
+            detailsDiv.innerHTML = html;
+        }
+
+        // ADMIN: Yeni Üyelik Oluştur (ŞİFREYİ SIFIRLAMA E-POSTASI İLE ATAMA)
+        async function yeniUyelikAc() {
+            const adSoyad = document.getElementById('newUyeAdSoyad').value.trim(); 
+            const email = document.getElementById('newUyeEmail').value.trim();
+            // ŞİFRE ALANI ARTIK KULLANILMIYOR
+            const bitisTarihi = document.getElementById('newUyeBitisTarihi').value;
+            const statusMsg = document.getElementById('uyeOlusturmaDurum');
+
+            if (!adSoyad || !email || !bitisTarihi) {
+                statusMsg.innerText = "Hata: Ad, E-posta ve Bitiş Tarihi alanlarını doldurun.";
+                return;
+            }
+            
+            statusMsg.style.color = '#FFA500';
+            statusMsg.innerText = "Kullanıcı hesabı oluşturuluyor, lütfen bekleyin...";
+
+            try {
+                // 1. Firebase Auth'ta Kullanıcıyı Oluşturma (Rastgele Geçici Şifre ile)
+                // Bu, kullanıcının şifresini belirleme e-postasını göndermek için gereklidir.
+                const tempPassword = Math.random().toString(36).substring(2, 15);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, tempPassword);
+                const newUid = userCredential.user.uid;
+                
+                // 2. Firestore'a Üyelik Bilgilerini Kaydetme
+                await setDoc(doc(db, "uyeler", newUid), {
+                    adSoyad: adSoyad, 
+                    email: email,
+                    rol: "uye",
+                    uyelikBaslangicTarihi: bugunStr, 
+                    uyelikBitisTarihi: bitisTarihi
+                });
+                
+                // 3. Şifre Belirleme E-postasını Gönderme
+                await sendPasswordResetEmail(auth, email);
+
+                // 4. Admin Paneli Oturumunu Kapatma
+                await signOut(auth); 
+                
+                statusMsg.style.color = '#00FF55';
+                statusMsg.innerText = `✅ BAŞARILI! ${adSoyad} hesabı oluşturuldu. Kullanıcıya şifresini belirlemesi için bir E-POSTA gönderildi.`;
+                
+                // Formu Temizle
+                document.getElementById('newUyeAdSoyad').value = '';
+                document.getElementById('newUyeEmail').value = '';
+                document.getElementById('newUyeBitisTarihi').value = '';
+
+            } catch (error) {
+                let errorMessage = error.message;
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "Bu e-posta adresi zaten kullanımda.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Geçersiz e-posta formatı.";
+                } else if (error.code === 'auth/operation-not-allowed') {
+                     errorMessage = "Bu işlem yetkili değil. Firebase Projenizde 'Email/Password' ile oturum açmanın etkin olduğundan emin olun.";
+                }
+                
+                statusMsg.style.color = '#FF4444';
+                statusMsg.innerText = `HATA: ${errorMessage}`;
+            }
+        }
+
+        async function uyeSuresiGuncelle() {
+            const email = document.getElementById('uyeEmailAdmin').value;
+            const tarih = document.getElementById('uyeBitisTarihiAdmin').value;
+            
+            if(!email || !tarih) return alert("E-posta ve Tarih giriniz.");
+
+            const q = query(collection(db, "uyeler"), where("email", "==", email));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    return alert(`Hata: ${email} adresine kayıtlı üye bulunamadı.`);
+                }
+
+                let targetUid = null;
+                querySnapshot.forEach((doc) => {
+                    targetUid = doc.id;
+                });
+                
+                if (targetUid) {
+                    await updateDoc(doc(db, "uyeler", targetUid), {
+                        uyelikBitisTarihi: tarih
+                    });
+                    alert(`${email} adresli üyenin süresi ${tarih} tarihine kadar uzatıldı.`);
+                }
+            } catch (e) {
+                alert(`İşlem sırasında hata oluştu. Lütfen Geliştirici Konsolunu (F12) kontrol edin.`);
+                console.error("Firestore Sorgu Hatası:", e);
+            }
+        }
+
+
+        // --- EVENT LISTENERS (Bağlantılar) ---
+
+        const loginBtn = document.getElementById('loginBtn');
+        const cikisBtn = document.getElementById('cikisBtn');
+        const randevuBtn = document.getElementById('randevuBtn');
+        const ayarGuncelleBtn = document.getElementById('ayarGuncelleBtn');
+        const showBookingsBtn = document.getElementById('showBookingsBtn');
+        const uyeGuncelleBtn = document.getElementById('uyeGuncelleBtn');
+        const wodKaydetBtn = document.getElementById('wodKaydetBtn');
+        const yeniUyelikAcBtn = document.getElementById('yeniUyelikAcBtn');
+        const daySelect = document.getElementById('daySelect');
+
+        if(loginBtn) loginBtn.addEventListener('click', girisYap);
+        if(cikisBtn) cikisBtn.addEventListener('click', cikisYap);
+        if(randevuBtn) randevuBtn.addEventListener('click', randevuAl);
+        
+        if(ayarGuncelleBtn) ayarGuncelleBtn.addEventListener('click', ayarGuncelle);
+        if(showBookingsBtn) showBookingsBtn.addEventListener('click', showBookings);
+        if(uyeGuncelleBtn) uyeGuncelleBtn.addEventListener('click', uyeSuresiGuncelle);
+        if(wodKaydetBtn) wodKaydetBtn.addEventListener('click', wodKaydet);
+        if(yeniUyelikAcBtn) yeniUyelikAcBtn.addEventListener('click', yeniUyelikAc);
+        
+        if(daySelect) daySelect.addEventListener('change', updateDailyTimeInputs);
+
+    </script>
+</body>
+</html>
